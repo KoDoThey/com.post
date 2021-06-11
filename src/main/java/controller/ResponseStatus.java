@@ -18,6 +18,7 @@ public class ResponseStatus {
         return Response.ok().entity(res.toString()).build();
     }
 
+
     public static Response toClientErrorResponse(String message) {
         JSONObject res = new JSONObject();
         res.put("status", ERROR_STATUS)

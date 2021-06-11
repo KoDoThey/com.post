@@ -27,5 +27,7 @@ public class Application {
 
         String uuid = UUID.randomUUID().toString();
         System.out.println(uuid);
+
+
     }
 }

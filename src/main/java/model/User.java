@@ -3,7 +3,7 @@ package model;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
-    private long userID;
+    private String userID;
     private String userName;
     private String fullName;
     private int age;
@@ -12,11 +12,11 @@ public class User {
     public User() { }
 
 
-    public long getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(long userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

@@ -3,6 +3,8 @@ package controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.mysql.cj.x.protobuf.Mysqlx;
+import infrastructor.Repository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,6 @@ import controller.Strings;
 
 import static controller.Strings.isNullOrEmptyString;
 
-
 @Path("/")
 public class API {
 
@@ -32,18 +33,24 @@ public class API {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // TODO: xử lý
-            User user = objectMapper.readValue(jsonParam, User.class);
+            User userAPI = objectMapper.readValue(jsonParam, User.class);
             JSONObject obj = new JSONObject(jsonParam);
             if (!obj.has("userName")) {
                 return ResponseStatus.toClientErrorResponse("user name is missed!");
             }
-            if (isNullOrEmptyString(obj.getString("username"))) {
+            if (isNullOrEmptyString(obj.getString("userName"))) {
                 return ResponseStatus.toClientErrorResponse("User name is null!");
             }
+
+            /* (createHashID)
             Service service = new Service() ;
             user.setUserID(service.createHashID());
-            payloadResponse = new JSONObject(objectMapper.writeValueAsString(user));
-            System.out.println(objectMapper.writeValueAsString(user));
+             */
+            userAPI.setUserID(Service.uuid());
+            Repository.addUser(userAPI);
+            payloadResponse = new JSONObject(objectMapper.writeValueAsString(userAPI));
+            System.out.println(objectMapper.writeValueAsString(userAPI));
+
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +69,7 @@ public class API {
         try{
             Post post = objectMapper.readValue(jsonParam, Post.class);
             JSONObject obj = new JSONObject(jsonParam);
-
+            System.out.println(post.getTitle());
             if (!obj.has("title")) {
                 message = "Title is missed!";
                 return ResponseStatus.toClientErrorResponse(message);
@@ -74,7 +81,6 @@ public class API {
             post.setPostID(Service.uuid());
             payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
             System.out.println(objectMapper.writeValueAsString(post));
-
 
         } catch (JsonProcessingException | JSONException e) {
             e.printStackTrace();
