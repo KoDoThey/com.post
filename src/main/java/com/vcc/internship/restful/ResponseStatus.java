@@ -1,4 +1,4 @@
-package controller;
+package com.vcc.internship.restful;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

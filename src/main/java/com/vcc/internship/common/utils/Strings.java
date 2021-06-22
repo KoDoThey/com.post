@@ -1,4 +1,4 @@
-package controller;
+package com.vcc.internship.common.utils;
 
 public class Strings {
     public static boolean isNullOrEmptyString(String content) {

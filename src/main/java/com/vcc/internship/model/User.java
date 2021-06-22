@@ -1,6 +1,4 @@
-package model;
-
-import java.util.concurrent.atomic.AtomicInteger;
+package com.vcc.internship.model;
 
 public class User {
     private String userID;

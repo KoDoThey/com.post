@@ -1,6 +1,9 @@
-import controller.API;
-import model.Post;
-import model.User;
+package com.vcc.internship;
+
+import com.vcc.internship.controller.PostController;
+import com.vcc.internship.model.User;
+import com.vcc.internship.restful.ClientExceptionMapper;
+import com.vcc.internship.restful.UncaughtExceptionMapper;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -12,7 +15,10 @@ public class Application {
     public static void main(String[] args) throws Exception{
         final String url = "http://localhost:" + 8080;
         URI uri = URI.create(url);
-        ResourceConfig serverConfig = new ResourceConfig(API.class);
+        ResourceConfig serverConfig = new ResourceConfig(
+                PostController.class,
+                UncaughtExceptionMapper.class,
+                ClientExceptionMapper.class);
         Server server = JettyHttpContainerFactory.createServer(uri, serverConfig, false);
         try {
             server.start();
@@ -27,7 +33,6 @@ public class Application {
 
         String uuid = UUID.randomUUID().toString();
         System.out.println(uuid);
-
 
     }
 }
