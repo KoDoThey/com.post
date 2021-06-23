@@ -22,9 +22,8 @@ public class PostRepository implements AutoCloseable {
         sqlConnection = ConnectionProviders.getOrCreate("post", new JdbcConfig(prop));
     }
 
-
     public Post getPostById(String postID) throws SQLException {
-        String query = "SELECT postID, title, description, userID FROM post WHERE postID = ?";
+        String query = "SELECT postID, title, description, userID, createTime, updateTime FROM post WHERE postID = ?";
         PreparedStatement ps = sqlConnection.prepareStatement(query);
         ps.setString(1, "postID");
         MyResultSet rs = new MyResultSet(ps.executeQuery());
@@ -34,12 +33,18 @@ public class PostRepository implements AutoCloseable {
             post.setTitle(rs.getString("title"));
             post.setDescription(rs.rs.getString("description"));
             post.setUserID(rs.rs.getString("userID"));
+
+//            if (post.getDeleteStatus()) {
+//                return null;
+//            } else {
+//                return post;
+//            }
         }
         return post;
     }
 
     public void addPost(Post post) throws SQLException {
-        String query = "INSERT INTO post VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO post VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = sqlConnection.prepareStatement(query);
         ps.setString(1, post.getPostID());
         ps.setString(2, post.getTitle());
@@ -47,12 +52,28 @@ public class PostRepository implements AutoCloseable {
         ps.setString(4, post.getUserID());
         ps.setTimestamp(5, post.getCreateTime());
         ps.setTimestamp(6, post.getUpdateTime());
-        ps.setBoolean(7, post.getDeleteStatus());
+        ps.setBoolean(7, false);
         ps.execute();
     }
 
+    public void updatePost(Post post) throws SQLException {
+        String query = "UPDATE post SET title = ?, description = ?, updateTime = ? WHERE postID = ?";
+        PreparedStatement ps = sqlConnection.prepareStatement(query);
+        ps.setString(1, post.getTitle());
+        ps.setString(2, post.getDescription());
+        ps.setTimestamp(3, post.getUpdateTime());
+        ps.setString(4, post.getPostID());
+        ps.execute();
+    }
 
-
+    public void deletePost(Post post) throws SQLException {
+        String query = "UPDATE post SET updateTime = ?, deleteStatus = ? WHERE postID = ?";
+        PreparedStatement ps = sqlConnection.prepareStatement(query);
+        ps.setTimestamp(1, post.getUpdateTime());
+        ps.setBoolean(2, true);
+        ps.setString(3, post.getPostID());
+        ps.execute();
+    }
 
     @Override
     public void close() throws Exception {

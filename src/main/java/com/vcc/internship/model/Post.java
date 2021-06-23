@@ -7,6 +7,12 @@ public class Post {
     private String title;
     private String description;
     private String userID;
+    private Timestamp createTime; //2017-02-14 01:53:24.981
+    private Timestamp updateTime;
+    private boolean deleteStatus;
+
+    public Post() {
+    }
 
     public Timestamp getCreateTime() {
         return createTime;
@@ -14,13 +20,6 @@ public class Post {
 
     public Timestamp getUpdateTime() {
         return updateTime;
-    }
-
-    private Timestamp createTime;
-    private Timestamp updateTime;
-    private boolean deleteStatus;
-
-    public Post() {
     }
 
     public void setCreateTime(Timestamp createTime) {

@@ -6,7 +6,8 @@ import java.sql.SQLException;
 public class MyResultSet  {
     public ResultSet rs;
 
-    public MyResultSet(ResultSet executeQuery) {
+    public MyResultSet(ResultSet rs) {
+        this.rs = rs;
     }
 
     public ResultSet getRs() {
