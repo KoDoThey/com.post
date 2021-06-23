@@ -7,7 +7,7 @@ public class Post {
     private String title;
     private String description;
     private String userID;
-    private Timestamp createTime; //2017-02-14 01:53:24.981
+    private Timestamp createTime;
     private Timestamp updateTime;
     private boolean deleteStatus;
 

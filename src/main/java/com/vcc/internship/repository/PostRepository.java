@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class PostRepository implements AutoCloseable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Connection sqlConnection;
@@ -23,22 +22,19 @@ public class PostRepository implements AutoCloseable {
     }
 
     public Post getPostById(String postID) throws SQLException {
-        String query = "SELECT postID, title, description, userID, createTime, updateTime FROM post WHERE postID = ?";
+        String query = "SELECT * FROM post WHERE postID = ?";
         PreparedStatement ps = sqlConnection.prepareStatement(query);
-        ps.setString(1, "postID");
+        ps.setString(1, postID);
         MyResultSet rs = new MyResultSet(ps.executeQuery());
         Post post = new Post();
         if (rs.first()) {
-            post.setPostID(rs.getString("postID"));
+//            post.setPostID(rs.getString("postID"));
             post.setTitle(rs.getString("title"));
-            post.setDescription(rs.rs.getString("description"));
-            post.setUserID(rs.rs.getString("userID"));
-
-//            if (post.getDeleteStatus()) {
-//                return null;
-//            } else {
-//                return post;
-//            }
+            post.setDescription(rs.getString("description"));
+            post.setUserID(rs.getString("userID"));
+            post.setCreateTime(rs.getTimestamp("createTime"));
+            post.setUpdateTime(rs.getTimestamp("updateTime"));
+            post.setDeleteStatus(rs.getBoolean("deleteStatus"));
         }
         return post;
     }

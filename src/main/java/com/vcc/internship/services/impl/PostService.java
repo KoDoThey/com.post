@@ -20,13 +20,21 @@ public class PostService implements Service {
     }
 
     public Post getPostById(String postID) throws SQLException {
-        if (postRepository.getPostById((postID)).getDeleteStatus()) {
+        Post post = postRepository.getPostById((postID));
+        if (post.getDeleteStatus()) {
             return null;
         } else {
             return postRepository.getPostById(postID);
         }
-
     }
+
+//    public Post getPostById(String postID) throws SQLException { //fixme: call 2 times (if & else)
+//        if (postRepository.getPostById(postID).getDeleteStatus()) {
+//            return null;
+//        } else {
+//            return postRepository.getPostById(postID);
+//        }
+//    }
 
     public void addPost(Post post) throws SQLException {
         post.setPostID(UUID.randomUUID().toString());

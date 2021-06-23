@@ -16,7 +16,28 @@ import static com.vcc.internship.common.utils.Strings.isNullOrEmptyString;
 
 @Path("/post")
 public class PostController {
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getPost(@QueryParam("postID") String postID) throws Exception {
+        String message;
+        if (isNullOrEmptyString(postID)) {
+            return ResponseStatus.toClientErrorResponse("postID is null");
+        }
 
+        JSONObject result = new JSONObject();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try (PostService postService = new PostService(new Configuration())) {
+            Post post = postService.getPostById(postID);
+            postService.getPostById(postID);
+            if (post == null) {
+                return ResponseStatus.toServerErrorResponse("Post is deleted!");
+            }
+            result = new JSONObject(objectMapper.writeValueAsString(post));
+        }
+        return ResponseStatus.toSuccessResponse("OK", result);
+    }
 
     @POST
     @Path("/add")
