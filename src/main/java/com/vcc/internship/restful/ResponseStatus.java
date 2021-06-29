@@ -18,6 +18,13 @@ public class ResponseStatus {
         return Response.ok().entity(res.toString()).build();
     }
 
+    public static Response toSuccessResponse(String message) {
+        JSONObject res = new JSONObject();
+        res.put("status", OK_STATUS)
+                .put("message", message)
+                .put("code", Response.Status.OK.getStatusCode());
+        return Response.ok().entity(res.toString()).build();
+    }
 
     public static Response toClientErrorResponse(String message) {
         JSONObject res = new JSONObject();

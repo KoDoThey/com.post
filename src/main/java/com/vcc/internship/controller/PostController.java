@@ -12,6 +12,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.vcc.internship.common.utils.Strings.isNullOrEmptyString;
 
 @Path("/post")
@@ -20,21 +23,31 @@ public class PostController {
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getPost(@QueryParam("postID") String postID) throws Exception {
-        String message;
-        if (isNullOrEmptyString(postID)) {
-            return ResponseStatus.toClientErrorResponse("postID is null");
-        }
-
+    public Response getPostByUserName(@QueryParam("postID") String postID) throws Exception {
+        if (isNullOrEmptyString(postID)) return ResponseStatus.toClientErrorResponse("postID is null");
         JSONObject result = new JSONObject();
         ObjectMapper objectMapper = new ObjectMapper();
         try (PostService postService = new PostService(new Configuration())) {
             Post post = postService.getPostById(postID);
-            postService.getPostById(postID);
-            if (post == null) {
-                return ResponseStatus.toServerErrorResponse("Post is deleted!");
-            }
+            if (post == null) return ResponseStatus.toServerErrorResponse("Post is deleted!");
             result = new JSONObject(objectMapper.writeValueAsString(post));
+        }
+        return ResponseStatus.toSuccessResponse("OK", result);
+    }
+
+    @GET
+    @Path("/get-post-by-userid")
+    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getPostByUserId(@QueryParam("userid") String userID) throws Exception {
+        if (isNullOrEmptyString(userID)) return ResponseStatus.toClientErrorResponse("User ID is null");
+
+        JSONObject result = new JSONObject();
+        List<Post> posts;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try (PostService postService = new PostService(new Configuration())) {
+            posts = postService.getPostByUserId(userID);
+            result = new JSONObject().put("data", posts);
         }
         return ResponseStatus.toSuccessResponse("OK", result);
     }
@@ -57,9 +70,10 @@ public class PostController {
             message = "Title is null";
             return ResponseStatus.toClientErrorResponse(message);
         }
-        PostService postService = new PostService(new Configuration());
-        postService.addPost(post);
-        payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        try (PostService postService = new PostService(new Configuration())) {
+            postService.addPost(post);
+            payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        }
         return ResponseStatus.toSuccessResponse("OK", payloadResponse);
     }
 
@@ -73,17 +87,14 @@ public class PostController {
         String message;
         Post post = objectMapper.readValue(jsonParam, Post.class);
         JSONObject obj = new JSONObject(jsonParam);
-        if (!obj.has("postID")) {
-            message = "postID is missing!";
-            return ResponseStatus.toClientErrorResponse(message);
-        }
         if (isNullOrEmptyString(obj.getString("postID"))) {
             message = "postID is null";
             return ResponseStatus.toClientErrorResponse(message);
         }
-        PostService postService = new PostService(new Configuration());
-        postService.updatePost(post);
-        payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        try (PostService postService = new PostService(new Configuration())) {
+            postService.updatePost(post);
+            payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        }
         return ResponseStatus.toSuccessResponse("OK", payloadResponse);
     }
 
@@ -97,17 +108,14 @@ public class PostController {
         String message;
         Post post = objectMapper.readValue(jsonParam, Post.class);
         JSONObject obj = new JSONObject(jsonParam);
-        if (!obj.has("postID")) {
-            message = "postID is missing!";
-            return ResponseStatus.toClientErrorResponse(message);
-        }
         if (isNullOrEmptyString(obj.getString("postID"))) {
             message = "postID is null";
             return ResponseStatus.toClientErrorResponse(message);
         }
-        PostService postService = new PostService(new Configuration());
-        postService.deletePost(post);
-        payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        try (PostService postService = new PostService(new Configuration())) {
+            postService.deletePost(post);
+            payloadResponse = new JSONObject(objectMapper.writeValueAsString(post));
+        }
         return ResponseStatus.toSuccessResponse("OK", payloadResponse);
     }
 }

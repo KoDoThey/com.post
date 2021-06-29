@@ -8,6 +8,8 @@ import com.vcc.internship.services.Service;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PostService implements Service {
@@ -20,8 +22,8 @@ public class PostService implements Service {
     }
 
     public Post getPostById(String postID) throws SQLException {
-        Post post = postRepository.getPostById((postID));
-        if (post.getDeleteStatus()) {
+        Post post = postRepository.getPostById(postID);
+        if (post.getDeleteStatus() == 1) {
             return null;
         } else {
             return postRepository.getPostById(postID);
@@ -35,6 +37,11 @@ public class PostService implements Service {
 //            return postRepository.getPostById(postID);
 //        }
 //    }
+
+    public List<Post> getPostByUserId(String userID) throws SQLException {
+        List<Post> posts = postRepository.getPostByUserId(userID);
+        return posts;
+    }
 
     public void addPost(Post post) throws SQLException {
         post.setPostID(UUID.randomUUID().toString());

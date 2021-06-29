@@ -9,7 +9,7 @@ public class Post {
     private String userID;
     private Timestamp createTime;
     private Timestamp updateTime;
-    private boolean deleteStatus;
+    private int deleteStatus;
 
     public Post() {
     }
@@ -30,11 +30,11 @@ public class Post {
         this.updateTime = updateTime;
     }
 
-    public boolean getDeleteStatus() {
+    public int getDeleteStatus() {
         return deleteStatus;
     }
 
-    public void setDeleteStatus(boolean deleteStatus) {
+    public void setDeleteStatus(int deleteStatus) {
         this.deleteStatus = deleteStatus;
     }
 

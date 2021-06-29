@@ -1,6 +1,7 @@
 package com.vcc.internship;
 
 import com.vcc.internship.controller.PostController;
+import com.vcc.internship.controller.UserController;
 import com.vcc.internship.model.User;
 import com.vcc.internship.restful.ClientExceptionMapper;
 import com.vcc.internship.restful.UncaughtExceptionMapper;
@@ -17,6 +18,7 @@ public class Application {
         URI uri = URI.create(url);
         ResourceConfig serverConfig = new ResourceConfig(
                 PostController.class,
+                UserController.class,
                 UncaughtExceptionMapper.class,
                 ClientExceptionMapper.class);
         Server server = JettyHttpContainerFactory.createServer(uri, serverConfig, false);
@@ -26,13 +28,13 @@ public class Application {
         } finally {
             server.stop();
         }
-
-        User user = new User();
-        long hashID = System.identityHashCode(user);
-        System.out.println(hashID);
-
-        String uuid = UUID.randomUUID().toString();
-        System.out.println(uuid);
+//
+//        User user = new User();
+//        long hashID = System.identityHashCode(user);
+//        System.out.println(hashID);
+//
+//        String uuid = UUID.randomUUID().toString();
+//        System.out.println(uuid);
 
     }
 }

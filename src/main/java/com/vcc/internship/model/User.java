@@ -6,9 +6,17 @@ public class User {
     private String fullName;
     private int age;
     private String password;
+    private int deleteStatus;
 
     public User() { }
 
+    public int getDeleteStatus() {
+        return deleteStatus;
+    }
+
+    public void setDeleteStatus(int deleteStatus) {
+        this.deleteStatus = deleteStatus;
+    }
 
     public String getUserID() {
         return userID;

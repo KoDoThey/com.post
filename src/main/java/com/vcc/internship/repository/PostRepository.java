@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostRepository implements AutoCloseable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,15 +30,37 @@ public class PostRepository implements AutoCloseable {
         MyResultSet rs = new MyResultSet(ps.executeQuery());
         Post post = new Post();
         if (rs.first()) {
-//            post.setPostID(rs.getString("postID"));
+            post.setPostID(rs.getString("postID"));
             post.setTitle(rs.getString("title"));
             post.setDescription(rs.getString("description"));
             post.setUserID(rs.getString("userID"));
             post.setCreateTime(rs.getTimestamp("createTime"));
             post.setUpdateTime(rs.getTimestamp("updateTime"));
-            post.setDeleteStatus(rs.getBoolean("deleteStatus"));
+            post.setDeleteStatus(rs.getInteger("deleteStatus"));
         }
         return post;
+    }
+
+    public List<Post> getPostByUserId(String userID) throws SQLException {
+        List<Post> posts = new ArrayList<>();
+        String query = "SELECT * FROM post WHERE userID = ?";
+        PreparedStatement ps = sqlConnection.prepareStatement(query);
+        ps.setString(1, userID);
+        MyResultSet rs = new MyResultSet(ps.executeQuery());
+        while (rs.next()) {
+            Post post = new Post();
+            post.setPostID(rs.getString("postID"));
+            post.setTitle(rs.getString("title"));
+            post.setDescription(rs.getString("description"));
+            post.setUserID(rs.getString("userID"));
+            post.setCreateTime(rs.getTimestamp("createTime"));
+            post.setUpdateTime(rs.getTimestamp("updateTime"));
+            post.setDeleteStatus(rs.getInteger("deleteStatus"));
+            if (post.getDeleteStatus() == 0) {
+                posts.add(post);
+            }
+        }
+        return posts;
     }
 
     public void addPost(Post post) throws SQLException {
